@@ -272,7 +272,8 @@ PROCESS(Clock, Resetn)
 					
 				WHEN STATE1 => 
 					IF (Next_State = '1') THEN
-						STATE <= STATE2
+						STATE <= STATE2;
+					END IF;
 					IF (Adjust_Up = '1') THEN
 						TENDER <= TENDER + 5;
 						
@@ -302,7 +303,7 @@ PROCESS(Clock, Resetn)
 					TEMP_HEX_COUNTER1 <= convertToHex(CHANGE_ONES);
 					TEMP_HEX_COUNTER2 <= convertToHex(CHANGE_TENTHS);
 					TEMP_HEX_COUNTER3 <= convertToHex(CHANGE_HUNDREDTHS);
-				END CASE;	
+			END CASE;	
 					
 		END IF;
 	
