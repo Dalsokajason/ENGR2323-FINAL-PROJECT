@@ -132,7 +132,7 @@ PROCESS(Clock, Resetn)
 		ELSIF (Rising_Edge(Clock)) THEN
 			CASE STATE IS
 				WHEN STATE0 =>
-					TENDER <= 0;
+					TENDER := 0;
 					IF (Next_State = '1') THEN
 						STATE <= STATE1;
 					END IF;
@@ -262,9 +262,9 @@ PROCESS(Clock, Resetn)
 					END CASE;
 					
 					--grab each digit of PRICE
-					PRICE_ONES <= PRICE / 100;
-					PRICE_TENTHS <= (PRICE MOD 100) / 10;
-					PRICE_HUNDREDTHS <= PRICE MOD 10;
+					PRICE_ONES := PRICE / 100;
+					PRICE_TENTHS := (PRICE MOD 100) / 10;
+					PRICE_HUNDREDTHS := PRICE MOD 10;
 					--convert each digit to hex and send to 7 segment display
 					TEMP_HEX_COUNTER1 <= convertToHex(PRICE_ONES);
 					TEMP_HEX_COUNTER2 <= convertToHex(PRICE_TENTHS);
@@ -276,19 +276,19 @@ PROCESS(Clock, Resetn)
 					END IF;
 					IF (Adjust_Up = '1' AND Adjust_Down = '0') THEN
 						IF (TENDER < 995) THEN
-							TENDER <= TENDER + 5;
+							TENDER := TENDER + 5;
 						END IF;
 						
 					ELSIF (Adjust_Down = '1' AND Adjust_Down = '0') THEN
 						IF (TENDER >= 5) THEN
-							TENDER <= TENDER - 5;
+							TENDER := TENDER - 5;
 						END IF;
 					END IF;
 					
 					--grab each digit of TENDER
-					TENDER_ONES <= TENDER / 100;
-					TENDER_TENTHS <= (TENDER MOD 100) / 10;
-					TENDER_HUNDREDTHS <= TENDER MOD 10;
+					TENDER_ONES := TENDER / 100;
+					TENDER_TENTHS := (TENDER MOD 100) / 10;
+					TENDER_HUNDREDTHS := TENDER MOD 10;
 					--convert each digit to hex and send to 7 segment display
 					TEMP_HEX_COUNTER1 <= convertToHex(TENDER_ONES);
 					TEMP_HEX_COUNTER2 <= convertToHex(TENDER_TENTHS);
@@ -298,11 +298,11 @@ PROCESS(Clock, Resetn)
 						STATE <= STATE0;
 					END IF;
 					
-					CHANGE <= TENDER - PRICE;
+					CHANGE := TENDER - PRICE;
 					
-					CHANGE_ONES <= CHANGE / 100;
-					CHANGE_TENTHS <= (CHANGE MOD 100) / 10;
-					CHANGE_HUNDREDTHS <= CHANGE MOD 10;
+					CHANGE_ONES := CHANGE / 100;
+					CHANGE_TENTHS := (CHANGE MOD 100) / 10;
+					CHANGE_HUNDREDTHS := CHANGE MOD 10;
 					--convert each digit to hex and send to 7 segment display
 					TEMP_HEX_COUNTER1 <= convertToHex(CHANGE_ONES);
 					TEMP_HEX_COUNTER2 <= convertToHex(CHANGE_TENTHS);
