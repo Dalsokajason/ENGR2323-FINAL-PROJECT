@@ -103,7 +103,7 @@ SIGNAL CHANGE_HUNDREDTHS: INTEGER RANGE 0 TO 9;
 --010 NUTS
 --011 SODA
 --100 DIET SODA
---101 JUICE 
+--101 JUICE (NO LONGER USED) 
 
 --Function to convert from an integer digit to the 7seg hex digit assignment
 --ex: 8 -> "0000000"
@@ -140,6 +140,7 @@ PROCESS(Clock, Resetn)
 					IF (Next_State = '0') THEN
 						STATE <= STATE1;
 					ELSE
+						--VENDING MACHINE 6 x 4
 						--First Column	
 						IF (Row = "000" and Col = "00") THEN    --SLOT A0
 							Item_Slot <= "00000"; --M AND M'S
@@ -159,9 +160,6 @@ PROCESS(Clock, Resetn)
 						ELSIF (Row = "101" and Col = "00") THEN --SLOT F0
 							Item_Slot <= "00101"; --DIET MOUNTAIN DEW
 							CATEGORY <= "100";
-						ELSIF (Row = "110" and Col = "00") THEN --SLOT G0
-							Item_Slot <= "00110"; --FRUIT PUNCH
-							CATEGORY <= "101";
 							--Second Column
 						ELSIF (Row = "000" and Col = "01") THEN --SLOT A1
 							Item_Slot <= "01000"; --SKITTLES
@@ -181,9 +179,6 @@ PROCESS(Clock, Resetn)
 						ELSIF (Row = "101" and Col = "01") THEN --SLOT F1
 							Item_Slot <= "01101"; --DIET COKE
 							CATEGORY <= "100";
-						ELSIF (Row = "110" and Col = "01") THEN --SLOT G1
-							Item_Slot <= "01110"; --LEMONADE
-							CATEGORY <= "101";
 							--Third Column
 						ELSIF (Row = "000" and Col = "10") THEN --SLOT A2
 							Item_Slot <= "10000"; --HERSHEYS CHOCOLATE BAR	
@@ -203,9 +198,6 @@ PROCESS(Clock, Resetn)
 						ELSIF (Row = "101" and Col = "10") THEN --SLOT F2
 							Item_Slot <= "10101"; --DIET DR PEPPER
 							CATEGORY <= "100";
-						ELSIF (Row = "110" and Col = "10") THEN --SLOT G2
-							Item_Slot <= "10110"; --APPLE JUICE 
-							CATEGORY <= "101";
 							--Fourth Column 
 						ELSIF (Row = "000" and Col = "11") THEN --SLOT A3
 							Item_Slot <= "11000"; --PROTEIN BAR 
@@ -225,9 +217,6 @@ PROCESS(Clock, Resetn)
 						ELSIF (Row = "101" and Col = "11") THEN --SLOT F3
 							Item_Slot <= "11101"; --DIET SPRITE
 							CATEGORY <= "100";
-						ELSIF (Row = "100" and Col = "11") THEN --SLOT G3
-							Item_Slot <= "11110"; --ORANGE JUICE
-							CATEGORY <= "101";
 						END IF;
 					
 					CASE Col IS
@@ -276,7 +265,7 @@ PROCESS(Clock, Resetn)
 								TENDER <= TENDER + 5;
 							END IF;
 							
-						ELSIF (Adjust_Down = '1' AND Adjust_Down = '0') THEN
+						ELSIF (Adjust_Up = '1' AND Adjust_Down = '0') THEN
 							IF (TENDER >= 5) THEN
 								TENDER <= TENDER - 5;
 							END IF;
@@ -316,6 +305,12 @@ PROCESS(Clock, Resetn)
 	HEX3 <= HEX_OFF;
 		
 END PROCESS;
+	PRICE <= PRICE_CANDY WHEN CATEGORY = "000" ELSE
+			 PRICE_CHIPS WHEN CATEGORY = "001" ELSE
+			 PRICE_NUTS WHEN CATEGORY = "010" ELSE
+			 PRICE_SODA WHEN CATEGORY = "011" ELSE
+			 PRICE_DIETSODA WHEN CATEGORY = "100" ELSE
+			 0;
 	
 	PRICE_ONES <= PRICE_CANDY / 100 WHEN CATEGORY = "000" ELSE
 			 PRICE_CHIPS / 100 WHEN CATEGORY = "001" ELSE
@@ -355,23 +350,23 @@ END PROCESS;
 			 (TENDER MOD 10) WHEN STATE = STATE1 ELSE
 			 0;
 	
-	CHANGE_ONES <= (TENDER - PRICE) / 100 WHEN STATE = STATE1 ELSE
-			 (TENDER - PRICE) / 100 WHEN STATE = STATE1 ELSE
-			 (TENDER - PRICE) / 100 WHEN STATE = STATE1 ELSE
-			 (TENDER - PRICE) / 100 WHEN STATE = STATE1 ELSE
-			 (TENDER - PRICE) / 100 WHEN STATE = STATE1 ELSE
+	CHANGE_ONES <= (TENDER - PRICE) / 100 WHEN STATE = STATE2 ELSE
+			 (TENDER - PRICE) / 100 WHEN STATE = STATE2 ELSE
+			 (TENDER - PRICE) / 100 WHEN STATE = STATE2 ELSE
+			 (TENDER - PRICE) / 100 WHEN STATE = STATE2 ELSE
+			 (TENDER - PRICE) / 100 WHEN STATE = STATE2 ELSE
 			 0;
-	CHANGE_TENTHS <= ((TENDER - PRICE) MOD 100) / 10 WHEN STATE = STATE1 ELSE
-			 ((TENDER - PRICE) MOD 100) / 10 WHEN STATE = STATE1 ELSE
-			 ((TENDER - PRICE) MOD 100) / 10 WHEN STATE = STATE1 ELSE
-			 ((TENDER - PRICE) MOD 100)/ 10 WHEN STATE = STATE1 ELSE
-			 ((TENDER - PRICE) MOD 100) / 10 WHEN STATE = STATE1 ELSE
+	CHANGE_TENTHS <= ((TENDER - PRICE) MOD 100) / 10 WHEN STATE = STATE2 ELSE
+			 ((TENDER - PRICE) MOD 100) / 10 WHEN STATE = STATE2 ELSE
+			 ((TENDER - PRICE) MOD 100) / 10 WHEN STATE = STATE2 ELSE
+			 ((TENDER - PRICE) MOD 100)/ 10 WHEN STATE = STATE2 ELSE
+			 ((TENDER - PRICE) MOD 100) / 10 WHEN STATE = STATE2 ELSE
 			 0;
-	CHANGE_HUNDREDTHS <= ((TENDER - PRICE) MOD 10) WHEN STATE = STATE1 ELSE
-			 ((TENDER - PRICE) MOD 10) WHEN STATE = STATE1 ELSE
-			 ((TENDER - PRICE) MOD 10) WHEN STATE = STATE1 ELSE
-			 ((TENDER - PRICE) MOD 10) WHEN STATE = STATE1 ELSE
-			 ((TENDER - PRICE) MOD 10) WHEN STATE = STATE1 ELSE
+	CHANGE_HUNDREDTHS <= ((TENDER - PRICE) MOD 10) WHEN STATE = STATE2 ELSE
+			 ((TENDER - PRICE) MOD 10) WHEN STATE = STATE2 ELSE
+			 ((TENDER - PRICE) MOD 10) WHEN STATE = STATE2 ELSE
+			 ((TENDER - PRICE) MOD 10) WHEN STATE = STATE2 ELSE
+			 ((TENDER - PRICE) MOD 10) WHEN STATE = STATE2 ELSE
 			 0;
 
 	HEX_COUNTER1 <= convertToHex(PRICE_ONES) WHEN STATE = STATE0 ELSE
