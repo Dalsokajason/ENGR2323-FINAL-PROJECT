@@ -137,6 +137,8 @@ PROCESS(Clock, Resetn)
 		IF Resetn = '1' THEN
 			STATE <= STATE0;
 			TENDER <= 0;
+		ELSIF (Admin_State = '1') THEN
+			STATE <= STATE3;
 		ELSIF (Rising_Edge(Clock)) THEN
 			CASE STATE IS
 				WHEN STATE0 =>
@@ -339,7 +341,7 @@ PROCESS(Clock, Resetn)
 					STATE2_LED <= '1';
 					
 					IF (Next_State = '0') THEN
-						STATE <= STATE3;
+						STATE <= STATE0;
 					ELSE
 					
 						IF (Adjust_Up = '0' AND Adjust_Down = '1') THEN
@@ -354,9 +356,6 @@ PROCESS(Clock, Resetn)
 						END IF;
 					END IF;
 				END CASE;
-		ELSIF (Admin_State = '1') THEN
-			STATE <= STATE3;
-			
 		END IF;
 	
 	HEX3 <= HEX_OFF;
