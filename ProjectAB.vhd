@@ -23,21 +23,6 @@ Port (Clock, Resetn : IN STD_LOGIC;
 END ProjectAB;
 
 Architecture behavior of ProjectAB IS
---Zero  0000001
---One   1001111
---Two   1101101
---Three 0000110
---Four  1001100
---Five  0100100
---Six   0100000
---Seven 1110000
---Eight 0000000
---Nine  0001100
-
---A 0001000
---B 1100000
---C 0110001
---D 1000010
 
 TYPE STATETYPE IS (STATE0, STATE1, STATE2);
 SIGNAL STATE : STATETYPE;
@@ -237,20 +222,6 @@ PROCESS(Clock, Resetn)
 						WHEN "110" => TEMP_HEX_ROW <= HEX_G;
 						WHEN OTHERS => TEMP_HEX_ROW <= HEX_OFF;
 					END CASE;
-					
-					--000 CANDY
-					--001 CHIPS
-					--010 NUTS
-					--011 SODA
-					--100 DIET SODA
-					--101 JUICE 
-					
-					
-					--grab each digit of PRICE
-					--convert each digit to hex and send to 7 segment display
-					--TEMP_HEX_COUNTER1 <= convertToHex(PRICE_ONES);
-					--TEMP_HEX_COUNTER2 <= convertToHex(PRICE_TENTHS);
-					--TEMP_HEX_COUNTER3 <= convertToHex(PRICE_HUNDREDTHS);
 					END IF;
 					
 				WHEN STATE1 => 
@@ -270,15 +241,6 @@ PROCESS(Clock, Resetn)
 								TENDER <= TENDER - 5;
 							END IF;
 						END IF;
-						
-						--grab each digit of TENDER
-						--TENDER_ONES <= TENDER / 100;
-						--TENDER_TENTHS <= (TENDER MOD 100) / 10;
-						--TENDER_HUNDREDTHS <= TENDER MOD 10;
-						--convert each digit to hex and send to 7 segment display
-						--TEMP_HEX_COUNTER1 <= convertToHex(TENDER_ONES);
-						--TEMP_HEX_COUNTER2 <= convertToHex(TENDER_TENTHS);
-						--TEMP_HEX_COUNTER3 <= convertToHex(TENDER_HUNDREDTHS);
 					END IF;
 				WHEN STATE2 =>
 					STATE0_LED <= '0';
@@ -289,14 +251,6 @@ PROCESS(Clock, Resetn)
 					ELSE
 						IF (TENDER >= PRICE) THEN
 							CHANGE <= TENDER - PRICE;
-					
-							--CHANGE_ONES <= CHANGE / 100;
-							--CHANGE_TENTHS <= (CHANGE MOD 100) / 10;
-							--CHANGE_HUNDREDTHS <= CHANGE MOD 10;
-							--convert each digit to hex and send to 7 segment display
-							--TEMP_HEX_COUNTER1 <= convertToHex(CHANGE_ONES);
-							--TEMP_HEX_COUNTER2 <= convertToHex(CHANGE_TENTHS);
-							--TEMP_HEX_COUNTER3 <= convertToHex(CHANGE_HUNDREDTHS);
 						END IF;
 					END IF;
 			END CASE;	
